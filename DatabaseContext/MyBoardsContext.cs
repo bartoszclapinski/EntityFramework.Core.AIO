@@ -14,4 +14,9 @@ public class MyBoardsContext : DbContext
     public MyBoardsContext(DbContextOptions<MyBoardsContext> options) : base(options)
     {
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        
+    }
 }
