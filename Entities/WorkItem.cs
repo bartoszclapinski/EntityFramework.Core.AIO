@@ -2,6 +2,7 @@
 
 public class WorkItem
 {
+    public int WorkItemId { get; set; }
     public string State { get; set; }
     public string Area { get; set; }
     public string IterationPath { get; set; }
