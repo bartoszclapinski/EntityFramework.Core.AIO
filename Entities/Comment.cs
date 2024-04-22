@@ -7,4 +7,7 @@ public class Comment
     public string Author { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    
+    public int WorkItemId { get; set; }
+    public WorkItem WorkItem { get; set; }
 }

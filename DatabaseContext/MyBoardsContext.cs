@@ -26,6 +26,13 @@ public class MyBoardsContext : DbContext
             o.Property(p => p.EndDate).HasPrecision(3);
             o.Property(p => p.RemainingWork).HasPrecision(14, 2);
             o.Property(p => p.Activity).HasPrecision(14, 2);
+            o.HasMany(p => p.Comments)
+                            .WithOne(c => c.WorkItem)
+                            .HasForeignKey(c => c.WorkItemId);
+
+            o.HasOne(p => p.Author)
+                            .WithMany(u => u.WorkItems)
+                            .HasForeignKey(w => w.AuthorId);
         });
 
         modelBuilder.Entity<Comment>(o =>
