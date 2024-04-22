@@ -27,5 +27,11 @@ public class MyBoardsContext : DbContext
             o.Property(p => p.RemainingWork).HasPrecision(14, 2);
             o.Property(p => p.Activity).HasPrecision(14, 2);
         });
+
+        modelBuilder.Entity<Comment>(o =>
+        {
+            o.Property(p => p.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            o.Property(p => p.UpdatedAt).ValueGeneratedOnUpdate();
+        });
     }
 }
