@@ -33,5 +33,12 @@ public class MyBoardsContext : DbContext
             o.Property(p => p.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             o.Property(p => p.UpdatedAt).ValueGeneratedOnUpdate();
         });
+        
+        modelBuilder.Entity<User>(o =>
+        {
+            o.HasOne(p => p.Address)
+                .WithOne(u => u.User)
+                .HasForeignKey<Address>(p => p.UserId);
+        });
     }
 }
