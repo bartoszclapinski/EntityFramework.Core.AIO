@@ -17,6 +17,15 @@ public class MyBoardsContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
+        modelBuilder.Entity<WorkItem>(o =>
+        {
+            o.Property(p => p.State).IsRequired();
+            o.Property(p => p.IterationPath).HasColumnName("Iteration_Path");
+            o.Property(p => p.Area).HasColumnType("varchar(200)");
+            o.Property(p => p.Effort).HasColumnType("decimal(5, 2)");
+            o.Property(p => p.EndDate).HasPrecision(3);
+            o.Property(p => p.RemainingWork).HasPrecision(14, 2);
+            o.Property(p => p.Activity).HasPrecision(14, 2);
+        });
     }
 }

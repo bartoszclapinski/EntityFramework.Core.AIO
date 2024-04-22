@@ -1,4 +1,8 @@
-﻿namespace MyBoardsApp.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+namespace MyBoardsApp.Entities;
 
 public class WorkItem
 {
@@ -18,6 +22,5 @@ public class WorkItem
     // Task
     public string Activity { get; set; }
     public decimal RemainingWork { get; set; }
-
     public string Type { get; set; }
 }
