@@ -10,6 +10,7 @@ public class MyBoardsContext : DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Address> Addresses { get; set; }
+    public DbSet<WorkItemState> WorkItemStates { get; set; }
 
     public MyBoardsContext(DbContextOptions<MyBoardsContext> options) : base(options)
     {
@@ -17,10 +18,14 @@ public class MyBoardsContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+	    modelBuilder.Entity<WorkItemState>()
+					    .Property(p => p.Value).IsRequired().HasMaxLength(50);
+	    
         modelBuilder.Entity<WorkItem>(o =>
         {
-            //   
-            o.Property(p => p.State).IsRequired();
+	        o.HasOne(p => p.WorkItemState)
+					        .WithMany()
+					        .HasForeignKey(w => w.WorkItemStateId);
             o.Property(p => p.IterationPath).HasColumnName("Iteration_Path");
             o.Property(p => p.Area).HasColumnType("varchar(200)");
             o.Property(p => p.Effort).HasColumnType("decimal(5, 2)");
