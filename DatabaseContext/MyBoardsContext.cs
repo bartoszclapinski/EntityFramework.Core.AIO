@@ -19,6 +19,7 @@ public class MyBoardsContext : DbContext
     {
         modelBuilder.Entity<WorkItem>(o =>
         {
+            //   
             o.Property(p => p.State).IsRequired();
             o.Property(p => p.IterationPath).HasColumnName("Iteration_Path");
             o.Property(p => p.Area).HasColumnType("varchar(200)");
@@ -29,10 +30,27 @@ public class MyBoardsContext : DbContext
             o.HasMany(p => p.Comments)
                             .WithOne(c => c.WorkItem)
                             .HasForeignKey(c => c.WorkItemId);
-
+	        
             o.HasOne(p => p.Author)
                             .WithMany(u => u.WorkItems)
                             .HasForeignKey(w => w.AuthorId);
+
+            o.HasMany(p => p.Tags)
+                            .WithMany(t => t.WorkItems)
+                            .UsingEntity<WorkItemTag>(
+                                            w => w.HasOne(wit => wit.Tag)
+                                                            .WithMany()
+                                                            .HasForeignKey(wit => wit.TagId),
+                                            w => w.HasOne(wit => wit.WorkItem)
+                                                            .WithMany()
+                                                            .HasForeignKey(wit => wit.WorkItemId),
+                                            wit =>
+                                            {
+	                                            wit.HasKey(x => new {x.TagId, x.WorkItemId});
+	                                            wit.Property(x => x.PublicationDate).HasDefaultValueSql("GETUTCDATE()");
+                                            });
+
+
         });
 
         modelBuilder.Entity<Comment>(o =>
@@ -47,5 +65,9 @@ public class MyBoardsContext : DbContext
                 .WithOne(u => u.User)
                 .HasForeignKey<Address>(p => p.UserId);
         });
+
+        
+        
+        
     }
 }
