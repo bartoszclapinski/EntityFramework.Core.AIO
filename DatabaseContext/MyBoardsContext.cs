@@ -1,11 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyBoardsApp.Entities;
+using MyBoardsApp.Entities.WorkItemTypes;
+using Task = MyBoardsApp.Entities.WorkItemTypes.Task;
 
 namespace MyBoardsApp.DatabaseContext;
 
 public class MyBoardsContext : DbContext
 {
     public DbSet<WorkItem> WorkItems { get; set; }
+    public DbSet<Issue> Issues { get; set; }
+    public DbSet<Task> Tasks { get; set; }
+    public DbSet<Epic> Epics { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Comment> Comments { get; set; }
@@ -20,6 +25,18 @@ public class MyBoardsContext : DbContext
     {
 	    modelBuilder.Entity<WorkItemState>()
 					    .Property(p => p.Value).IsRequired().HasMaxLength(50);
+
+	    modelBuilder.Entity<Epic>()
+					    .Property(e => e.EndDate).HasPrecision(3);
+
+	    modelBuilder.Entity<Task>()
+					    .Property(t => t.Activity).HasMaxLength(200);
+	    modelBuilder.Entity<Task>()
+					    .Property(t => t.RemainingWork).HasPrecision(14, 2);
+	    
+	    modelBuilder.Entity<Issue>()
+					    .Property(i => i.Effort).HasColumnType("decimal(5, 2)");
+	    
 	    
         modelBuilder.Entity<WorkItem>(o =>
         {
@@ -28,10 +45,6 @@ public class MyBoardsContext : DbContext
 					        .HasForeignKey(w => w.WorkItemStateId);
             o.Property(p => p.IterationPath).HasColumnName("Iteration_Path");
             o.Property(p => p.Area).HasColumnType("varchar(200)");
-            o.Property(p => p.Effort).HasColumnType("decimal(5, 2)");
-            o.Property(p => p.EndDate).HasPrecision(3);
-            o.Property(p => p.RemainingWork).HasPrecision(14, 2);
-            o.Property(p => p.Activity).HasPrecision(14, 2);
             o.HasMany(p => p.Comments)
                             .WithOne(c => c.WorkItem)
                             .HasForeignKey(c => c.WorkItemId);
