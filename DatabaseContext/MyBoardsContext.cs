@@ -24,7 +24,7 @@ public class MyBoardsContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 	    modelBuilder.Entity<WorkItemState>()
-					    .Property(p => p.Value).IsRequired().HasMaxLength(50);
+					    .Property(p => p.Value).IsRequired().HasMaxLength(60);
 
 	    modelBuilder.Entity<Epic>()
 					    .Property(e => e.EndDate).HasPrecision(3);
