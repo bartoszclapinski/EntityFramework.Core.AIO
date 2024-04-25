@@ -25,4 +25,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//	Migrate the database if there are pending migrations
+using IServiceScope scope = app.Services.CreateScope();
+var context = scope.ServiceProvider.GetRequiredService<MyBoardsContext>();
+var pendingMigrations = context.Database.GetPendingMigrations();
+if (pendingMigrations.Any()) context.Database.Migrate();
+//	End of migration
+
 app.Run();
