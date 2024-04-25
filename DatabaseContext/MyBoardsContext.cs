@@ -75,6 +75,10 @@ public class MyBoardsContext : DbContext
         {
             o.Property(p => p.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             o.Property(p => p.UpdatedAt).ValueGeneratedOnUpdate();
+            o.HasOne(p => p.Author)
+				.WithMany(u => u.Comments)
+				.HasForeignKey(c => c.AuthorId)
+				.OnDelete(DeleteBehavior.NoAction);
         });
         
         modelBuilder.Entity<User>(o =>

@@ -9,4 +9,5 @@ public class User
 
     public Address Address { get; set; }
     public List<WorkItem> WorkItems { get; set; } = new();
+    public List<Comment> Comments { get; set; } = new();
 }
