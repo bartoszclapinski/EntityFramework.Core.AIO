@@ -35,4 +35,6 @@ namespace MyBoardsApp.Migrations
                 oldMaxLength: 60);
         }
     }
+    
+    
 }
