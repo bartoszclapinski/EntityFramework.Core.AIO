@@ -96,6 +96,11 @@ public class MyBoardsContext : DbContext
 				.HasForeignKey<Address>(p => p.UserId);
 		});
 
-
+		modelBuilder.Entity<Tag>().HasData(
+			new Tag { TagId = 1, Value = "Web" },
+			new Tag { TagId = 2, Value = "UI" },
+			new Tag { TagId = 3, Value = "Desktop" },
+			new Tag { TagId = 4, Value = "API" },
+			new Tag { TagId = 5, Value = "Service" });
 	}
 }
