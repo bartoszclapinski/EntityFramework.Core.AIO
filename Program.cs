@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MyBoardsApp.Controllers;
 using MyBoardsApp.DatabaseContext;
 using MyBoardsApp.Entities;
 
@@ -11,6 +12,9 @@ builder.Services.AddDbContext<MyBoardsContext>
                 (options => options.UseSqlServer(
                                 builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
                 );
+
+builder.Services.AddScoped<UserController>();
+builder.Services.AddScoped<WorkItemsController>();
 
 WebApplication app = builder.Build();
 
@@ -34,33 +38,37 @@ if (pendingMigrations.Any()) context.Database.Migrate();
 //	End of migration
 
 //	Seed the database with initial data
-var users = context.Users.ToList();
-if (!users.Any())
+/*
 {
-	var user1 = new User()
+	var users = context.Users.ToList();
+	if (!users.Any())
 	{
-		Email = "user1@test.com", 
-		FullName = "User 1",
-		Address = new Address()
+		var user1 = new User()
 		{
-			City = "City 1",
-			Street = "Street 1"
-		}
-	};
-	var user2 = new User()
-	{
-		Email = "user2@test.com", 
-		FullName = "User 2",
-		Address = new Address()
+			Email = "user1@test.com", 
+			FullName = "User 1",
+			Address = new Address()
+			{
+				City = "City 1",
+				Street = "Street 1"
+			}
+		};
+		var user2 = new User()
 		{
-			City = "City 2",
-			Street = "Street 2"
-		}
-	};
-	
-	context.Users.AddRange(user1, user2);
-	context.SaveChangesAsync();
+			Email = "user2@test.com", 
+			FullName = "User 2",
+			Address = new Address()
+			{
+				City = "City 2",
+				Street = "Street 2"
+			}
+		};
+		
+		context.Users.AddRange(user1, user2);
+		context.SaveChangesAsync();
+	}
 }
+*/
 //	End of seeding
 
 
