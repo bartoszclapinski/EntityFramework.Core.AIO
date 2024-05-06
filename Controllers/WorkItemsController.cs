@@ -39,6 +39,16 @@ public class WorkItemsController
 			.Select(g => new { WorkItemStateId = g.Key, Count = g.Count()})
 			.ToListAsync();
 	}
-	
+
+	[HttpGet("epic/{stateId:int}")]
+	public async Task<IEnumerable<WorkItem>> GetEpicsByStateIdOrderedByPriority([FromRoute] int stateId = 4)
+	{
+		var result = await _context.WorkItems
+			.Where(w => w.WorkItemStateId == stateId)
+			.OrderBy(w => w.Priority)
+			.ToListAsync();
+
+		return result;
+	}
 	
 }

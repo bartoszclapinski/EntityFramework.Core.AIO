@@ -40,4 +40,15 @@ public class CommentsController
 		var comments = await _context.Comments.OrderBy(c => c.CreatedAt).Take(count).ToListAsync();
 		return comments;
 	}
+
+	[HttpGet("count-by-user")]
+	public async Task<User> GetUserWithMostComments()
+	{
+		var authorId = _context.Comments
+			.GroupBy(c => c.AuthorId)
+			.Select(g => new { AuthorId = g.Key, Count = g.Count() })
+			.OrderByDescending(s => s.Count);
+		
+		return await _context.Users.FirstOrDefaultAsync(u => u.UserId == authorId.First().AuthorId);
+	}
 }
