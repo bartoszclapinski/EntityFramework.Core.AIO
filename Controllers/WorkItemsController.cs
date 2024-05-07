@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBoardsApp.DatabaseContext;
 using MyBoardsApp.Entities;
+using MyBoardsApp.Entities.WorkItemTypes;
 
 namespace MyBoardsApp.Controllers;
 
@@ -51,4 +52,36 @@ public class WorkItemsController
 		return result;
 	}
 	
+	[HttpGet("{epicId:int}")]
+	public async Task<Epic> GetEpic([FromRoute] int epicId)
+	{
+		return await _context.Epics.FirstOrDefaultAsync(e => e.WorkItemId == epicId);
+	}
+
+	[HttpPost("{epicId:int}")]
+	public async Task<WorkItem> UpdateEpic([FromRoute] int epicId)
+	{
+		Epic epic = await _context.Epics.FirstOrDefaultAsync(e => e.WorkItemId == epicId);
+		epic.Area = epic.Area + " Updated";
+		epic.StartDate = DateTime.Now;
+		await _context.SaveChangesAsync();
+
+		return epic;
+	}
+	
+	[HttpPost("{epicId:int},{stateId:int}")]
+	public async Task<WorkItem> UpdateEpicState([FromRoute] int epicId, [FromRoute] int stateId)
+	{
+		Epic epic = await _context.Epics.FirstOrDefaultAsync(e => e.WorkItemId == epicId);
+		WorkItemState state = await _context.WorkItemStates.FirstOrDefaultAsync(s => s.WorkItemStateId == stateId);
+		epic.WorkItemState = state;
+		await _context.SaveChangesAsync();
+
+		return epic;
+	}
+	
+	
+	
+	
+    
 }
