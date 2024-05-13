@@ -46,5 +46,16 @@ public class UserController
 
 		return user;
 	}
+
+	[HttpGet("{userId:Guid}")]
+	public async Task<User> GetUserByIdWithComments(Guid userId)
+	{
+		User result = await _context.Users
+			.Include(u => u.Comments).ThenInclude(c => c.WorkItem)
+			.Include(u => u.Address)
+			.FirstOrDefaultAsync(u => u.UserId == userId);
+
+		return result;
+	} 
 	
 }

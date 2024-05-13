@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using MyBoardsApp.Controllers;
 using MyBoardsApp.DatabaseContext;
@@ -12,6 +14,11 @@ builder.Services.AddDbContext<MyBoardsContext>
                 (options => options.UseSqlServer(
                                 builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
                 );
+
+builder.Services.Configure<JsonOptions>(o =>
+{
+	o.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 builder.Services.AddScoped<UserController>();
 builder.Services.AddScoped<WorkItemsController>();
