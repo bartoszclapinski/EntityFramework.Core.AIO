@@ -47,15 +47,29 @@ public class UserController
 		return user;
 	}
 
-	[HttpGet("{userId:Guid}")]
-	public async Task<User> GetUserByIdWithComments(Guid userId)
+	[HttpGet("{userId}")]
+	public async Task<User> GetUserByIdWithComments(string userId)
 	{
 		User result = await _context.Users
 			.Include(u => u.Comments).ThenInclude(c => c.WorkItem)
 			.Include(u => u.Address)
-			.FirstOrDefaultAsync(u => u.UserId == userId);
+			.FirstOrDefaultAsync(u => u.UserId == new Guid(userId));
 
 		return result;
 	} 
 	
+	[HttpDelete("{userId}")]
+	public async Task DeleteUser(string userId)
+	{
+		User user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == new Guid(userId));
+		var comments = await _context.Comments.Where(c => c.AuthorId == user.UserId).ToListAsync();
+		
+		//	Remove all comments by the user
+		_context.Comments.RemoveRange(comments);
+		await _context.SaveChangesAsync();
+		
+		//	Remove the user
+		_context.Users.Remove(user);
+		await _context.SaveChangesAsync();
+	}
 }

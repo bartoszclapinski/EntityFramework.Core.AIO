@@ -16,6 +16,7 @@ public class MyBoardsContext : DbContext
 	public DbSet<Comment> Comments { get; set; }
 	public DbSet<Address> Addresses { get; set; }
 	public DbSet<WorkItemState> WorkItemStates { get; set; }
+	public DbSet<WorkItemTag> WorkItemTag { get; set; }
 
 	public MyBoardsContext(DbContextOptions<MyBoardsContext> options) : base(options)
 	{
