@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MyBoardsApp.DatabaseContext;
 using MyBoardsApp.Entities;
 using MyBoardsApp.Entities.WorkItemTypes;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyBoardsApp.Controllers;
 
@@ -78,6 +79,20 @@ public class WorkItemsController
 		await _context.SaveChangesAsync();
 
 		return epic;
+	}
+
+	[HttpDelete]
+	public async Task DeleteWorkItemWithTrackChanger()
+	{
+		var workItem = new Epic
+		{
+			WorkItemId = 2
+		};
+
+		var entry = _context.Attach(workItem);
+		entry.State = EntityState.Deleted;
+		
+		await _context.SaveChangesAsync();
 	}
 	
 	
