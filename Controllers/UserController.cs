@@ -72,4 +72,12 @@ public class UserController
 		_context.Users.Remove(user);
 		await _context.SaveChangesAsync();
 	}
+
+	[HttpDelete("/api/data/{userId}/cascade")]
+	public async Task DeleteUserWithComments(string userId)
+	{
+		User user = _context.Users.Include(u => u.Comments).FirstOrDefault(u => u.UserId == new Guid(userId));
+		if (user != null) _context.Users.Remove(user);
+		await _context.SaveChangesAsync();
+	}
 }

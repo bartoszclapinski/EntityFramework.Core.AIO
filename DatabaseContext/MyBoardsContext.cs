@@ -87,7 +87,7 @@ public class MyBoardsContext : DbContext
 			o.HasOne(p => p.Author)
 				.WithMany(u => u.Comments)
 				.HasForeignKey(c => c.AuthorId)
-				.OnDelete(DeleteBehavior.NoAction);
+				.OnDelete(DeleteBehavior.ClientCascade);
 		});
 
 		modelBuilder.Entity<User>(o =>
