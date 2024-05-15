@@ -80,4 +80,20 @@ public class UserController
 		if (user != null) _context.Users.Remove(user);
 		await _context.SaveChangesAsync();
 	}
+	
+	[HttpPost("{userId}")]
+	public async Task<User> UpdateUserEmail(string userId)
+	{
+		User user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == new Guid(userId));
+		//	For debugging purposes
+		var entries1 = _context.ChangeTracker.Entries();
+		
+		user.Email = user.Email + " Updated";
+		//	For debugging purposes
+		var entries2 = _context.ChangeTracker.Entries();
+		
+		await _context.SaveChangesAsync();
+
+		return user;
+	}
 }
