@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyBoardsApp.Entities;
+using MyBoardsApp.Entities.ViewModels;
 using MyBoardsApp.Entities.WorkItemTypes;
 using Task = MyBoardsApp.Entities.WorkItemTypes.Task;
 
@@ -17,6 +18,7 @@ public class MyBoardsContext : DbContext
 	public DbSet<Address> Addresses { get; set; }
 	public DbSet<WorkItemState> WorkItemStates { get; set; }
 	public DbSet<WorkItemTag> WorkItemTag { get; set; }
+	public DbSet<TopAuthor> ViewTopAuthors { get; set; }
 
 	public MyBoardsContext(DbContextOptions<MyBoardsContext> options) : base(options)
 	{
@@ -103,5 +105,11 @@ public class MyBoardsContext : DbContext
 			new Tag { TagId = 3, Value = "Desktop" },
 			new Tag { TagId = 4, Value = "API" },
 			new Tag { TagId = 5, Value = "Service" });
+
+		modelBuilder.Entity<TopAuthor>(o =>
+		{
+			o.ToView("View_TopAuthors");
+			o.HasNoKey();
+		});
 	}
 }
