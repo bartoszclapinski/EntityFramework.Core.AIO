@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBoardsApp.DatabaseContext;
 using MyBoardsApp.Entities;
+using MyBoardsApp.Entities.ViewModels;
 using MyBoardsApp.Entities.WorkItemTypes;
 using Task = System.Threading.Tasks.Task;
 
@@ -95,8 +96,10 @@ public class WorkItemsController
 		await _context.SaveChangesAsync();
 	}
 	
+	[HttpGet("top-authors")]
+	public async Task<IEnumerable<TopAuthor>> GetTopAuthors()
+	{
+		return await _context.ViewTopAuthors.ToListAsync();
+	}
 	
-	
-	
-    
 }
