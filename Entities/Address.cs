@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyBoardsApp.Entities;
 
@@ -12,4 +13,11 @@ public class Address
 
     public Guid UserId { get; set; }
     public User User { get; set; }
+    public Coordinate Coordinate { get; set; }
+}
+
+public class Coordinate
+{
+   public decimal? Longitude { get; set; }
+   public decimal? Latitude { get; set; }
 }

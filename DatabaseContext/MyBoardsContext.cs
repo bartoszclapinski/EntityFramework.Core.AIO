@@ -111,5 +111,13 @@ public class MyBoardsContext : DbContext
 			o.ToView("View_TopAuthors");
 			o.HasNoKey();
 		});
+
+		modelBuilder.Entity<Address>()
+			.OwnsOne(a => a.Coordinate,
+				o =>
+				{
+					o.Property(c => c.Latitude).HasPrecision(18, 7);
+					o.Property(c => c.Longitude).HasPrecision(18, 7);
+				});
 	}
 }
