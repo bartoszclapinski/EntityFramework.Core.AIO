@@ -11,8 +11,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MyBoardsContext>
-                (options => options.UseSqlServer(
-                                builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
+                (options => options
+	                .UseLazyLoadingProxies()
+	                .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
                 );
 
 builder.Services.Configure<JsonOptions>(o =>

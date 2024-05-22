@@ -73,7 +73,7 @@ public class UserController
 		await _context.SaveChangesAsync();
 	}
 
-	[HttpDelete("/api/data/{userId}/cascade")]
+	[HttpDelete("{userId}/cascade")]
 	public async Task DeleteUserWithComments(string userId)
 	{
 		User user = _context.Users.Include(u => u.Comments).FirstOrDefault(u => u.UserId == new Guid(userId));
@@ -95,5 +95,21 @@ public class UserController
 		await _context.SaveChangesAsync();
 
 		return user;
+	}
+	
+	[HttpGet("lazy-loading/{userId}")]
+	public async Task<object> GetUserWithLazyLoading(string userId)
+	{
+		var withAddress = true;
+		
+		User user =  await _context.Users.FirstOrDefaultAsync(u => u.UserId == new Guid(userId));
+
+		if (withAddress)
+		{
+			var result = new {FullName = user.FullName, Address = $"{user.Address.Street}, {user.Address.City}, {user.Address.Country}"};
+			return result;
+		}
+
+		return new { FullName = user.FullName, Address = "-" };
 	}
 }

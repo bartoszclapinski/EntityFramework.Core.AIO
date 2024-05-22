@@ -7,7 +7,7 @@ public class User
     
     public string Email { get; set; }
 
-    public Address Address { get; set; }
-    public List<WorkItem> WorkItems { get; set; } = new();
-    public List<Comment> Comments { get; set; } = new();
+    public virtual Address Address { get; set; }
+    public virtual List<WorkItem> WorkItems { get; set; } = new();
+    public virtual List<Comment> Comments { get; set; } = new();
 }
