@@ -10,12 +10,12 @@ public abstract class WorkItem
     public string Area { get; set; }
     public string IterationPath { get; set; }
     public int Priority { get; set; }
-    public List<Comment> Comments { get; set; } = new();
-    public User Author { get; set; }
+    public virtual List<Comment> Comments { get; set; } = new();
+    public virtual User Author { get; set; }
     public Guid AuthorId { get; set; }
-    public List<Tag> Tags { get; set; }
+    public virtual List<Tag> Tags { get; set; }
     public int WorkItemStateId { get; set; }
-    public WorkItemState WorkItemState { get; set; }
+    public virtual WorkItemState WorkItemState { get; set; }
     
     
     
