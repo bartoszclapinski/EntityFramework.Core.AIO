@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MyBoardsContext>
                 (options => options
-	                .UseLazyLoadingProxies()
+	                //.UseLazyLoadingProxies()
 	                .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
                 );
 
