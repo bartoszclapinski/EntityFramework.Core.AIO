@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBoardsApp.DatabaseContext;
+using MyBoardsApp.DTO;
 using MyBoardsApp.Entities;
 
 namespace MyBoardsApp.Controllers;
@@ -111,5 +113,36 @@ public class UserController
 		}
 
 		return new { FullName = user.FullName, Address = "-" };
+	}
+	
+	[HttpGet("pagination/{filter}/{sortBy}/{page}/{pageSize}")]
+	public async Task<PagedResult<User>> GetUsersWithFilterAndPagination(string filter, string sortBy, int page, int pageSize)
+	{
+		var sortByDesc = false;
+		var query = _context.Users
+			.Where(u => filter == null ||
+			            u.Email.ToLower().Contains(filter.ToLower()) ||
+			            u.FullName.ToLower().Contains(filter.ToLower()));
+
+		var totalCount = query.Count();
+		
+		if (sortBy != null)
+		{
+			var columnsSelector = new Dictionary<string, Expression<Func<User, object>>>
+			{
+				{ nameof(User.Email), user => user.Email },
+				{ nameof(User.FullName), user => user.FullName }
+			};
+			Expression<Func<User, object>> sortByExpression = columnsSelector[sortBy];
+
+			query = sortByDesc 
+				? query.OrderByDescending(sortByExpression)
+				: query.OrderBy(sortByExpression);
+		}
+		
+		var result = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+		var pagedResult = new PagedResult<User>(result, totalCount, pageSize, page);
+
+		return pagedResult;
 	}
 }

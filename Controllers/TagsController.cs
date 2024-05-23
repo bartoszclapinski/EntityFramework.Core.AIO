@@ -29,7 +29,7 @@ public class TagsController
 		return tag;
 	}
 
-	[HttpPut]
+	[HttpPut("multiple")]
 	public async Task<IEnumerable<Tag>> CreateMultipleTags()
 	{
 		Tag mvc = new Tag { Value = "MVC" };
