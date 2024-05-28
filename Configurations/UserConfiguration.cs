@@ -12,5 +12,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 		builder.HasOne(p => p.Address)
 			.WithOne(u => u.User)
 			.HasForeignKey<Address>(p => p.UserId);
+
+		builder.HasIndex(u => new { u.Email, u.FullName })
+			.HasDatabaseName("IX_Users_Email_FullName");
 	}
 }
