@@ -8,7 +8,7 @@ using MyBoardsApp.Entities;
 namespace MyBoardsApp.Controllers;
 
 [ApiController]
-[Route("api/data")]
+[Route("api/users")]
 public class UserController
 {
 	private readonly MyBoardsContext _context;
@@ -144,5 +144,30 @@ public class UserController
 		var pagedResult = new PagedResult<User>(result, totalCount, pageSize, page);
 
 		return pagedResult;
+	}
+
+	[HttpGet("from-country/just-fullname/{country}")]
+	public async Task<IEnumerable<object>> GetUsersFromCountry(string country)
+	{
+		var users = await _context.Users
+			.Include(u => u.Address)
+			.Where(u => u.Address.Country == country)
+			.Select(u => u.FullName)
+			.ToListAsync();
+
+		return users;
+	}
+
+	[HttpGet("from-country/with-comments/{country}")]
+	public async Task<IEnumerable<object>> GetUsersFromCountryWithComments(string country)
+	{
+		var users = await _context.Users
+			.Include(u => u.Comments)
+			.Include(u => u.Address)
+			.Where(u => u.Address.Country == country)
+			.Select(u => new { u.FullName, Comments = u.Comments.Select(c => c.Message) })
+			.ToListAsync();
+
+		return users;
 	}
 }
