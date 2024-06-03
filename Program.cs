@@ -5,9 +5,12 @@ using MyBoardsApp.Controllers;
 using MyBoardsApp.DatabaseContext;
 using MyBoardsApp.DataGenerator;
 using MyBoardsApp.Entities;
+using MyBoardsApp.Sieve;
+using Sieve.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<ISieveProcessor, AppSieveProcessor>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

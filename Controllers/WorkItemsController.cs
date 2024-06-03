@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBoardsApp.DatabaseContext;
+using MyBoardsApp.DTO;
 using MyBoardsApp.Entities;
 using MyBoardsApp.Entities.ViewModels;
 using MyBoardsApp.Entities.WorkItemTypes;
+using Sieve.Models;
+using Sieve.Services;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyBoardsApp.Controllers;
@@ -100,6 +103,35 @@ public class WorkItemsController
 	public async Task<IEnumerable<TopAuthor>> GetTopAuthors()
 	{
 		return await _context.ViewTopAuthors.ToListAsync();
+	}
+	
+	[HttpPost("sieve")]
+	public async Task<PagedResult<EpicDto>> GetWorkItemsWithSieve([FromBody] SieveModel sieveModel, ISieveProcessor sieveProcessor)
+	{
+		var epics = _context.Epics
+			.Include(e => e.Author)
+			.AsQueryable();
+		
+		//	Apply Sieve to filter, sort and paginate the results
+		var epicDto = await sieveProcessor.Apply(sieveModel, epics)
+			.Select(e => new EpicDto
+			{
+				WorkItemId = e.WorkItemId,
+				Area = e.Area,
+				Priority = e.Priority,
+				StartDate = e.StartDate,
+				AuthorFullName = e.Author.FullName
+			})
+			.ToListAsync();
+
+		//	Count the total number of records
+		var totalCount = await sieveProcessor.Apply(sieveModel, epics, applyPagination: false, applySorting: false)
+			.CountAsync();
+		
+		//	Return the result
+		var result = new PagedResult<EpicDto>(epicDto, totalCount, sieveModel.Page.Value, sieveModel.PageSize.Value);
+
+		return result;
 	}
 	
 }
