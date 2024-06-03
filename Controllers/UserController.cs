@@ -170,4 +170,36 @@ public class UserController
 
 		return users;
 	}
+	
+	[HttpGet("get-user-with-comments/{userId}")]
+	public async Task<object> GetUserWithCommentsByUserId(string userId)
+	{
+		User user = await GetUser(new Guid(userId), o => o.Comments);
+		return user;
+	}
+	
+	[HttpGet("get-user-with-comments-and-address/{userId}")]
+	public async Task<User> GetUserWithCommentsAndAddressByUserId(string userId)
+	{
+		User user = await GetUser(new Guid(userId), o => o.Comments, o => o.Address);
+		return user;
+	}
+	
+	
+
+	private async Task<User> GetUser (Guid userId, params Expression<Func<User, object>>[] includes)
+	{
+		var baseQuery = _context.Users.AsQueryable();
+
+		if (includes.Any())
+		{
+			foreach (var include in includes)
+			{
+				baseQuery = baseQuery.Include(include);
+			}
+		}
+		
+		User user = await baseQuery.FirstOrDefaultAsync(u => u.UserId == userId);
+		return user;
+	}
 }
